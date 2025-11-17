@@ -19,6 +19,7 @@ struct IdeaSpotApp: App {
         let schema = Schema([
             Idea.self,
             AIExpansion.self,
+            User.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
@@ -31,7 +32,7 @@ struct IdeaSpotApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            RootView()
                 .tint(.accent) // Global accent color for the app
         }
         .modelContainer(sharedModelContainer)
