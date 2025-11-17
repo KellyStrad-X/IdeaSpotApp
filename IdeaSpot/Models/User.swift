@@ -58,7 +58,6 @@ extension User {
 
     static let additionalOutputSections = [
         "Source Alternatives/Competitors",
-        "Explain the unique value proposition",
         "Minimum Feature Set",
         "Risks & Challenges",
         "Explore revenue models",

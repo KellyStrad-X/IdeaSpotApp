@@ -6,9 +6,13 @@
 //
 
 import SwiftUI
+import SwiftData
 import FirebaseAuth
 
 struct SettingsView: View {
+    @Environment(\.modelContext) private var modelContext
+    @Query private var users: [User]
+
     @State private var isSigningOut = false
 
     var body: some View {
@@ -37,6 +41,25 @@ struct SettingsView: View {
                             .foregroundColor(.secondary)
                     }
                 }
+
+                // Debug section (only in DEBUG builds)
+                #if DEBUG
+                Section("Developer") {
+                    Button(role: .destructive, action: resetOnboarding) {
+                        HStack {
+                            Image(systemName: "arrow.clockwise")
+                            Text("Reset Onboarding")
+                        }
+                    }
+
+                    Button(role: .destructive, action: clearAllData) {
+                        HStack {
+                            Image(systemName: "trash")
+                            Text("Clear All Data")
+                        }
+                    }
+                }
+                #endif
 
                 // App info
                 Section("About") {
@@ -91,6 +114,30 @@ struct SettingsView: View {
         }
         isSigningOut = false
     }
+
+    #if DEBUG
+    private func resetOnboarding() {
+        // Delete all users to trigger onboarding again
+        for user in users {
+            modelContext.delete(user)
+        }
+        try? modelContext.save()
+
+        // Force app to restart by exiting
+        exit(0)
+    }
+
+    private func clearAllData() {
+        // Delete all data
+        for user in users {
+            modelContext.delete(user)
+        }
+        try? modelContext.save()
+
+        // Force app to restart
+        exit(0)
+    }
+    #endif
 }
 
 // Helper extension for app version

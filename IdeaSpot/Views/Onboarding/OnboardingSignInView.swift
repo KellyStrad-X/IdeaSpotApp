@@ -30,22 +30,35 @@ struct OnboardingSignInView: View {
 
             Spacer()
 
-            // Sign in with Apple button
-            SignInWithAppleButton(
-                onRequest: { request in
-                    request.requestedScopes = [.fullName, .email]
-                },
-                onCompletion: { result in
-                    switch result {
-                    case .success(let authorization):
-                        handleAuthorization(authorization)
-                    case .failure(let error):
-                        print("Sign in failed: \(error.localizedDescription)")
+            VStack(spacing: 16) {
+                // Sign in with Apple button
+                SignInWithAppleButton(
+                    onRequest: { request in
+                        request.requestedScopes = [.fullName, .email]
+                    },
+                    onCompletion: { result in
+                        switch result {
+                        case .success(let authorization):
+                            handleAuthorization(authorization)
+                        case .failure(let error):
+                            print("Sign in failed: \(error.localizedDescription)")
+                        }
                     }
+                )
+                .signInWithAppleButtonStyle(colorScheme == .dark ? .white : .black)
+                .frame(height: 50)
+
+                // Temporary skip button for development
+                #if DEBUG
+                Button(action: {
+                    onSignInComplete()
+                }) {
+                    Text("Skip for Now (Dev Only)")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
                 }
-            )
-            .signInWithAppleButtonStyle(colorScheme == .dark ? .white : .black)
-            .frame(height: 50)
+                #endif
+            }
             .padding(.horizontal, 40)
             .padding(.bottom, 50)
         }
